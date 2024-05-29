@@ -38,6 +38,7 @@ import ClearCompletedButton from './ClearCompletedButton.astro'
     
     const newItem = exampleTaskItem.cloneNode(true) as HTMLElement
     const contentEl = newItem.querySelector('[data-selector="item-content"]')!
+    fetch('/api', { method: 'POST', body: JSON.stringify({ title: taskContent }) })
     const randomId = Math.random().toString(36).substring(7)
 
     newItem.querySelector('label')?.setAttribute('for', randomId)

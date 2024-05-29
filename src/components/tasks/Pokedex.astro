@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pokedex</title>
+</head>
+<body class="bg-white font-serif">
+    <div class="bg-red-700 px-5 py-4 fixed top-0 w-full text-white">
+        <h1 class="text-2xl font-bold">Pokedex</h1>
+    </div>
+    <div id="container" class="max-w-screen-lg mx-auto mt-20"></div>
+
+    <script>
+        // Obtenemos los datos de todos los pokemon 
+        fetch('https://pokeapi.co/api/v2/pokemon')
+            .then(response => response.json())
+            .then(json => {
+                printPokemons(json.results);
+            });
+
+        // Pinta todos los pokemos insertando un HTML dentro del #container
+        function printPokemons(pokemons: any[]) {
+            const container = document.getElementById('container');
+            pokemons.forEach((pokemon: { url: any; name: string; }) => {
+                const card = document.createElement('div');
+                card.classList.add('card', 'bg-white', 'p-6', 'rounded-lg', 'shadow-md');
+
+                const img = document.createElement('img');
+                img.src = `https://pokeres.bastionbot.org/images/pokemon/${getPokemonId(pokemon.url)}.png`;
+                img.classList.add('w-full', 'mb-4');
+
+                const span = document.createElement('span');
+                span.textContent = `Nº. ${getPokemonId(pokemon.url)}`;
+                span.classList.add('text-gray-600', 'text-sm');
+
+                const h2 = document.createElement('h2');
+                h2.textContent = pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1);
+                h2.classList.add('text-xl', 'font-semibold');
+
+                card.appendChild(img);
+                card.appendChild(span);
+                card.appendChild(h2);
+
+                container!.appendChild(card);
+            });
+        }
+
+        // En esta ruta de la API no nos viene el id de cada pokemon, pero si que nos viene
+        // una URL, para poder obtener todos los datos de ese pokemon, la cual contiene su ID
+        // así que le extraigo el ID a la URL
+        function getPokemonId(url: string) {
+            const parts = url.split('/');
+            return parts[parts.length - 2];
+        }
+    </script>
+</body>
+</html>
